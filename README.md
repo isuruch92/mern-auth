@@ -67,7 +67,21 @@ git clone <repository-url>
 cd <repository-folder>
 ```
 
+### 1.5. Check the scripts:
+
+If you are running on a windows machine, set the root package.json scripts as this
+
+```bash
+  "scripts": {
+    "dev": "SET NODE_ENV=development&& nodemon backend/index.js",
+    "start": "SET NODE_ENV=production&& node backend/index.js",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+  },
+```
+
 ### 2. Install Backend Dependencies:
+
+At the root directory
 
 ```bash
 npm install
@@ -95,7 +109,7 @@ CLIENT_URL=http://localhost:5173             # Frontend URL for local developmen
 
 ### 5. Running the Backend (Node.js):
 
-To start the backend server:
+To start the backend server: At the root directory,
 
 ```bash
 npm run dev
