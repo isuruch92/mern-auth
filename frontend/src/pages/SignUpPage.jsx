@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Mail, Lock, Loader, Backpack, User } from "lucide-react";
@@ -9,9 +9,10 @@ import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 import { useAuthStore } from "../store/authStore";
 
 function SignUpPage() {
-  const [name, setName] = useState("Isuru");
-  const [email, setEmail] = useState("isuruch92@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showStrengthMeter, setShowStrengthMeter] = useState(false);
   const navigate = useNavigate();
 
   const { signup, error, errorCode, isLoading, clearErrors } = useAuthStore();
@@ -19,6 +20,16 @@ function SignUpPage() {
   useEffect(() => {
     clearErrors();
   }, [clearErrors]);
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+
+    // Only set showStrengthMeter to true if the user has typed something
+    if (value.length > 0) {
+      setShowStrengthMeter(true);
+    }
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -77,7 +88,7 @@ function SignUpPage() {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
             />
 
             {error && (
@@ -94,7 +105,22 @@ function SignUpPage() {
               </p>
             )}
 
-            <PasswordStrengthMeter password={password} />
+            <AnimatePresence>
+              {showStrengthMeter && (
+                <motion.div
+                  key="password-strength-meter"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{
+                    delay: 0.1,
+                    duration: 0.4,
+                  }}
+                >
+                  <PasswordStrengthMeter password={password} />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <motion.button
               className="mt-6 w-full py-3 px-4 bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-white 

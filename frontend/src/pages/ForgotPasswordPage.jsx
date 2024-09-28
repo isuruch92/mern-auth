@@ -6,7 +6,7 @@ import { ArrowLeft, Loader, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ForgotPasswordPage = () => {
-  const [email, setEmail] = useState("isuruch92@gmail.com");
+  const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { isLoading, error, forgotPassword, clearErrors } = useAuthStore();

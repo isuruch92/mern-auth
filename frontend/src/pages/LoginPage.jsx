@@ -7,8 +7,8 @@ import Input from "../components/Input";
 import { useAuthStore } from "../store/authStore";
 
 function LoginPage() {
-  const [email, setEmail] = useState("isuruch92@gmail.com");
-  const [password, setPassword] = useState("654321");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const { login, isLoading, error, clearErrors } = useAuthStore();
 
