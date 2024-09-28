@@ -1,0 +1,129 @@
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Link, useNavigate } from "react-router-dom";
+
+import { Mail, Lock, Loader, Backpack, User } from "lucide-react";
+
+import Input from "../components/Input";
+import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
+import { useAuthStore } from "../store/authStore";
+
+function SignUpPage() {
+  const [name, setName] = useState("Isuru");
+  const [email, setEmail] = useState("isuruch92@gmail.com");
+  const [password, setPassword] = useState("123456");
+  const navigate = useNavigate();
+
+  const { signup, error, errorCode, isLoading, clearErrors } = useAuthStore();
+
+  useEffect(() => {
+    clearErrors();
+  }, [clearErrors]);
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+
+    try {
+      await signup(email, password, name);
+      navigate("/verify-email");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: 0.2,
+          duration: 0.5,
+          ease: "linear",
+        }}
+        className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden"
+      >
+        {/* bg-gray-800 bg-opacity-50 */}
+
+        <div className="p-8 pb-2">
+          <Backpack
+            className="mb-2 mr-auto ml-auto text-[#0B6FF4]"
+            size={36}
+            absoluteStrokeWidth
+          />
+          <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
+            Create Account
+          </h2>
+          {/* from-green-400 to-emerald-500 */}
+          {/* from-[#0B6FF4] to-[#0bbef4] */}
+
+          <form onSubmit={handleSignUp}>
+            <Input
+              icon={User}
+              type="text"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Input
+              icon={Mail}
+              type="email"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              icon={Lock}
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            {error && (
+              <p className="text-red-500 font-semibold mt-2 text-sm">
+                {error}&nbsp;
+                {errorCode && (
+                  <Link
+                    to={"/verify-email"}
+                    className="text-sm text-[#0B6FF4] hover:underline italic"
+                  >
+                    Go to verify email
+                  </Link>
+                )}
+              </p>
+            )}
+
+            <PasswordStrengthMeter password={password} />
+
+            <motion.button
+              className="mt-6 w-full py-3 px-4 bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-white 
+						font-bold rounded-lg shadow-lg hover:from-[#095FD7] hover:to-[#1561B0] focus:outline-none 
+            focus:ring-2 focus:ring-[#0b67e4] focus:ring-offset-2 focus:ring-offset-gray-200"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <Loader className=" animate-spin mx-auto" size={24} />
+              ) : (
+                "Sign Up"
+              )}
+            </motion.button>
+          </form>
+        </div>
+        <div className="px-8 pt-4 pb-8 bg-white flex justify-center">
+          <p className="text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link to={"/login"} className="text-[#0B6FF4] hover:underline">
+              Login
+            </Link>
+          </p>
+        </div>
+      </motion.div>
+    </>
+  );
+}
+
+export default SignUpPage;
