@@ -2,6 +2,9 @@
 
 A fullstack MERN authentication project that implements user authentication using JWT (JSON Web Tokens) for secure login, signup, email verification, forgot password, and reset password functionalities. This project is built with **React** for the frontend, **Node.js** with **Express.js** for the backend, and **MongoDB** for the database.
 
+# Live Demo
+https://mern-auth-4adx.onrender.com/login
+
 ## Features
 
 - JWT-based authentication (Signup, Login, Logout)
