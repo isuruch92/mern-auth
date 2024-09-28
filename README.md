@@ -58,7 +58,7 @@ A fullstack MERN authentication project that implements user authentication usin
 
 - **Node.js** installed on your system
 - **MongoDB Atlas** account (for the database)
-- **Mailtrap** account (for sending emails)
+- **Mailtrap** account (for sending emails) --> `**NOTE** : You have to use the gmail address used to create the mailtrap account, otherwise the signup functionalities will not work because Mailtrap does not allow to send emails to other email addresses unless you provide them with your own domain.`
 
 ### 1. Clone the repository:
 
@@ -155,3 +155,17 @@ http://localhost:5173
 - **JWT**: For generating authentication tokens for users.
 - **Zustand**: For simple and scalable state management in React.
 - **Framer Motion**: For adding beautiful UI animations.
+
+## Credits
+
+This project was inspired by a tutorial from the YouTube channel [As a Programmer](https://www.youtube.com/@asaprogrammer_). The tutorial provided the foundation for building the authentication system using MERN stack technologies.
+
+I have made several improvements and customizations to the project, including:
+
+- A different theme and UI enhancements to better suit the design requirements.
+- Backend improvements such as:
+  - **Resend Verification Email** functionality.
+  - **Pending User Schema** to prevent unauthorized email signups, ensuring only verified users are stored in the database.
+  - Automatic deletion of unverified users after email verification.
+
+Special thanks to [As a Programmer](https://www.youtube.com/@asaprogrammer_) for providing valuable guidance in the original tutorial.
