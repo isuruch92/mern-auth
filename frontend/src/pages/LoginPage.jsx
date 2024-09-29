@@ -7,8 +7,8 @@ import Input from "../components/Input";
 import { useAuthStore } from "../store/authStore";
 
 function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("isuruch92@gmail.com");
+  const [password, setPassword] = useState("54321");
 
   const { login, isLoading, error, clearErrors } = useAuthStore();
 
@@ -32,17 +32,20 @@ function LoginPage() {
         duration: 0.5,
         ease: "linear",
       }}
-      className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden"
+      className="max-w-md w-full bg-white rounded-2xl shadow-lg relative"
     >
       <div className="p-8 pb-2">
-        <Backpack
-          className="mb-2 mr-auto ml-auto text-[#0B6FF4]"
-          size={36}
-          absoluteStrokeWidth
-        />
+        <div className="rounded-full bg-[#0B6FF4] w-[60px] h-[60px] flex justify-center items-center absolute top-[-30px] left-[calc(50%-30px)]">
+          <Backpack
+            className="mr-auto ml-auto text-white"
+            size={36}
+            absoluteStrokeWidth
+          />
+        </div>
+
         {/* bg-gradient-to-r from-green-400 to-emerald-500 
             bg-gradient-to-r from-[#0B6FF4] to-[#1976d2]   */}
-        <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
+        <h2 className="text-3xl font-bold mt-4 mb-8 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
           Welcome Back
         </h2>
 
@@ -103,7 +106,7 @@ function LoginPage() {
 
       {/* dark=> bg-gray-900 bg-opacity-50
           light => bg-white*/}
-      <div className="px-8 pt-4 pb-8 bg-white flex justify-center">
+      <div className="px-8 pt-4 pb-8 rounded-bl-[16px] rounded-br-[16px] bg-white flex justify-center">
         {/* dark=> text-gray-400
           light => text-gray-600*/}
         <p className="text-sm text-gray-600">

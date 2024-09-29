@@ -104,14 +104,14 @@ const EmailVerificationPage = () => {
   }, [clearErrors]);
 
   return (
-    <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div className="max-w-md w-full bg-white rounded-2xl shadow-lg overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
+        className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
+        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
           Verify Your Email
         </h2>
         <p className="text-center text-gray-700 mb-6 text-base">

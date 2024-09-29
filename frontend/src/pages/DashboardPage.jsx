@@ -16,9 +16,9 @@ const DashboardPage = () => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.5 }}
-      className="max-w-md w-full mx-auto mt-10 p-8 bg-white rounded-xl shadow-2xl border border-gray-100"
+      className="max-w-md w-full mx-auto mt-10 p-8 bg-white rounded-xl shadow-lg border border-gray-100"
     >
-      <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
+      <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
         Dashboard
       </h2>
 

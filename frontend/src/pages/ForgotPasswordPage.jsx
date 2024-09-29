@@ -26,10 +26,10 @@ const ForgotPasswordPage = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden"
+      className="max-w-md w-full bg-white rounded-2xl shadow-lg overflow-hidden"
     >
       <div className="p-8 pb-2">
-        <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
+        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
           Forgot Password
         </h2>
 

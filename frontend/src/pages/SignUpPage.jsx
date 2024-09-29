@@ -52,17 +52,19 @@ function SignUpPage() {
           duration: 0.5,
           ease: "linear",
         }}
-        className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden"
+        className="max-w-md w-full bg-white rounded-2xl shadow-lg relative"
       >
         {/* bg-gray-800 bg-opacity-50 */}
 
         <div className="p-8 pb-2">
-          <Backpack
-            className="mb-2 mr-auto ml-auto text-[#0B6FF4]"
-            size={36}
-            absoluteStrokeWidth
-          />
-          <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
+          <div className="rounded-full bg-[#0B6FF4] w-[60px] h-[60px] flex justify-center items-center absolute top-[-30px] left-[calc(50%-30px)]">
+            <Backpack
+              className="mr-auto ml-auto text-white"
+              size={36}
+              absoluteStrokeWidth
+            />
+          </div>
+          <h2 className="text-3xl font-bold mt-4 mb-8 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
             Create Account
           </h2>
           {/* from-green-400 to-emerald-500 */}
@@ -139,7 +141,7 @@ function SignUpPage() {
             </motion.button>
           </form>
         </div>
-        <div className="px-8 pt-4 pb-8 bg-white flex justify-center">
+        <div className="px-8 pt-4 pb-8 rounded-bl-[16px] rounded-br-[16px] bg-white flex justify-center">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
             <Link to={"/login"} className="text-[#0B6FF4] hover:underline">
