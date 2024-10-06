@@ -9,7 +9,10 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        // Password is required only if the user is not using Google OAuth
+        return !this.isGoogleUser;
+      },
     },
     name: {
       type: String,
@@ -23,6 +26,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isGoogleUser: {
+      type: Boolean,
+      default: false,
+    },
+    googleId: { type: String, unique: true, sparse: true }, // Store Google ID for future logins
+    profilePicture: { type: String }, // Optionally store Google profile picture
     resetPasswordToken: String,
     resetPasswordExpiresAt: Date,
     verificationToken: String,

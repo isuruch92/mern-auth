@@ -10,6 +10,7 @@ import {
   sendResetSuccessEmail,
 } from "../mailtrap/emails.js";
 import { PendingUser } from "../models/pending-user.model.js";
+import { googleAuthClient } from "../google-auth/google-auth.config.js";
 
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
@@ -128,6 +129,7 @@ export const verifyEmail = async (req, res) => {
       password: pendingUser.password,
       name: pendingUser.name,
       isVerified: true,
+      isGoogleUser: false,
     });
 
     await newUser.save();
@@ -145,7 +147,7 @@ export const verifyEmail = async (req, res) => {
 
     await sendWelcomeEmail(newUser.email, newUser.name);
 
-    generateTokenAndSetCookie(res, newUser._id);
+    const token = generateTokenAndSetCookie(res, newUser._id);
 
     res.status(200).json({
       success: true,
@@ -154,6 +156,7 @@ export const verifyEmail = async (req, res) => {
         ...newUser._doc,
         password: undefined,
       },
+      token,
     });
   } catch (error) {
     console.log("Error in verifyEmail: ", error);
@@ -210,6 +213,15 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Invalid Credentials" });
     }
 
+    // Check if the user is a Google user
+    if (user.isGoogleUser) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This email is registered via Google. Please use Google Sign-In.",
+      });
+    }
+
     const isPasswordValid = await bcryptjs.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -218,7 +230,7 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Invalid Credentials" });
     }
 
-    generateTokenAndSetCookie(res, user._id);
+    const token = generateTokenAndSetCookie(res, user._id);
 
     user.lastLogin = new Date();
     await user.save();
@@ -230,6 +242,7 @@ export const login = async (req, res) => {
         ...user._doc,
         password: undefined,
       },
+      token,
     });
   } catch (error) {
     return res.status(400).json({ success: false, message: error.message });
@@ -333,5 +346,72 @@ export const checkAuth = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const googleAuthCallback = async (req, res) => {
+  const { code } = req.query;
+
+  try {
+    // Step 1: Exchange the authorization code for tokens
+    const { tokens } = await googleAuthClient.getToken(code);
+    console.log("tokens: ", tokens);
+
+    // Step 2: Verify the ID token from the tokens response
+    const ticket = await googleAuthClient.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    console.log("ticket: ", ticket);
+
+    // Step 3: Extract user info from the token payload
+    const payload = ticket.getPayload();
+    const { email, name, sub: googleId, picture } = payload;
+
+    // Step 4: Check if user exists by email (this handles regular users too)
+    let user = await User.findOne({ email });
+
+    console.log("user: ", user);
+    if (user) {
+      if (!user.isGoogleUser) {
+        // Case: User signed up with email/password, but now trying with Google
+        return res.redirect(
+          `${process.env.CLIENT_URL}/login?error=EmailAlreadyRegistered`
+        );
+      }
+      // If user exists and is a Google user, you can just proceed with login
+    } else {
+      // If no user exists, create a new Google user
+      user = new User({
+        email,
+        name,
+        googleId,
+        isGoogleUser: true,
+        isVerified: true, // Since we're using Google OAuth, user is verified
+        profilePicture: picture,
+      });
+      await user.save();
+    }
+
+    // Step 4.5
+    await sendWelcomeEmail(user.email, user.name);
+
+    // Step 5: Generate JWT and set cookie
+    const token = generateTokenAndSetCookie(res, user._id);
+
+    // Step 6: Redirect the user back to the frontend
+    const userObj = {
+      ...user._doc,
+      password: undefined,
+    };
+
+    const userString = encodeURIComponent(JSON.stringify(userObj));
+
+    res.redirect(
+      `${process.env.CLIENT_URL}/?token=${token}&user=${userString}`
+    );
+  } catch (error) {
+    console.error("Error during Google OAuth:", error);
+    res.status(500).json({ message: "Authentication failed" });
   }
 };
