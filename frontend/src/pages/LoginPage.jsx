@@ -3,17 +3,22 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Mail, Lock, Loader, Backpack } from "lucide-react";
 
-import Input from "../components/Input";
 import { useAuthStore } from "../store/authStore";
+import Input from "../components/Input";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 function LoginPage() {
-  const [email, setEmail] = useState("isuruch92@gmail.com");
-  const [password, setPassword] = useState("54321");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const { login, isLoading, error, clearErrors } = useAuthStore();
 
   useEffect(() => {
-    clearErrors();
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get("error");
+    if (!error) {
+      clearErrors();
+    }
   }, [clearErrors]);
 
   const handleLogin = async (e) => {
@@ -48,6 +53,20 @@ function LoginPage() {
         <h2 className="text-3xl font-bold mt-4 mb-8 text-center bg-gradient-to-r from-[#0B6FF4] to-[#1976d2] text-transparent bg-clip-text">
           Welcome Back
         </h2>
+
+        {/* Google Login Button */}
+        <div className="mt-4 mb-6">
+          <GoogleLoginButton label="Continue with Google" />
+        </div>
+
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs">
+            <span className="bg-white px-4 text-gray-500">Or</span>
+          </div>
+        </div>
 
         <form onSubmit={handleLogin}>
           <Input

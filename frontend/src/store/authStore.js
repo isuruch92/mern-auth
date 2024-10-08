@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import { verifyTokenLocally } from "../utils/verifyTokenLocally";
 
 const API_URL =
   import.meta.env.MODE === "development"
@@ -48,6 +49,8 @@ export const useAuthStore = create((set) => ({
         isAuthenticated: true,
         isLoading: false,
       });
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
       return response.data;
     } catch (error) {
       set({
@@ -68,6 +71,7 @@ export const useAuthStore = create((set) => ({
         isAuthenticated: true,
         isLoading: false,
       });
+      localStorage.setItem("token", response.data.token);
     } catch (error) {
       set({
         error:
@@ -79,36 +83,75 @@ export const useAuthStore = create((set) => ({
   },
   checkAuth: async () => {
     set({ isCheckingAuth: true, error: null });
-    try {
-      const response = await axios.get(`${API_URL}/check-auth`);
-      set({
-        user: response.data.user,
-        isAuthenticated: true,
-        isCheckingAuth: false,
-      });
-    } catch (error) {
-      set({ error: null, isCheckingAuth: false, isAuthenticated: false });
+
+    const isOnline = window.navigator.onLine; // Check if the user is online
+
+    if (isOnline) {
+      // Online: Verify with the backend
+      try {
+        const response = await axios.get(`${API_URL}/check-auth`);
+        set({
+          user: response.data.user,
+          isAuthenticated: true,
+          isCheckingAuth: false,
+        });
+      } catch (error) {
+        set({ error: null, isCheckingAuth: false, isAuthenticated: false });
+      }
+    } else {
+      // Offline support: Verify token locally
+      const isTokenValid = verifyTokenLocally();
+
+      if (isTokenValid) {
+        const user = JSON.parse(localStorage.getItem("user"));
+        // If valid, allow the user to proceed
+        set({ isAuthenticated: true, isCheckingAuth: false, user });
+      } else {
+        // If invalid, mark the user as unauthenticated
+        set({ error: null, isAuthenticated: false, isCheckingAuth: false });
+      }
     }
   },
   login: async (email, password) => {
     set({ isLoading: true, error: null });
-    try {
-      const response = await axios.post(`${API_URL}/login`, {
-        email,
-        password,
-      });
-      set({
-        isAuthenticated: true,
-        user: response.data.user,
-        error: null,
-        isLoading: false,
-      });
-    } catch (error) {
-      set({
-        error: error.response?.data?.message || "Error logging in",
-        isLoading: false,
-      });
-      throw error;
+
+    const isOnline = window.navigator.onLine; // Check if the user is online
+
+    if (isOnline) {
+      try {
+        const response = await axios.post(`${API_URL}/login`, {
+          email,
+          password,
+        });
+        set({
+          isAuthenticated: true,
+          user: response.data.user,
+          error: null,
+          isLoading: false,
+        });
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+      } catch (error) {
+        set({
+          error: error.response?.data?.message || "Error logging in",
+          isLoading: false,
+        });
+        throw error;
+      }
+    } else {
+      // Offline support: Verify token locally
+      const isTokenValid = verifyTokenLocally();
+      if (isTokenValid) {
+        const user = JSON.parse(localStorage.getItem("user"));
+        set({ isAuthenticated: true, user, error: null, isLoading: false });
+      } else {
+        // If invalid, mark the user as unauthenticated
+        set({
+          error: "Error logging in",
+          isAuthenticated: false,
+          isLoading: false,
+        });
+      }
     }
   },
   logout: async () => {
@@ -159,5 +202,23 @@ export const useAuthStore = create((set) => ({
   },
   clearErrors: () => {
     set({ error: null });
+  },
+  setUser: (user, token) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
+    set({
+      user,
+      isAuthenticated: true,
+      token,
+    });
+  },
+  setErrorMessage: (errorMessage) => {
+    set({
+      error: errorMessage,
+      isAuthenticated: false,
+      isLoading: false,
+      isCheckingAuth: false,
+    });
   },
 }));

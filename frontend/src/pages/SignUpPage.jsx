@@ -7,6 +7,7 @@ import { Mail, Lock, Loader, Backpack, User } from "lucide-react";
 import Input from "../components/Input";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 import { useAuthStore } from "../store/authStore";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 function SignUpPage() {
   const [name, setName] = useState("");
@@ -69,6 +70,20 @@ function SignUpPage() {
           </h2>
           {/* from-green-400 to-emerald-500 */}
           {/* from-[#0B6FF4] to-[#0bbef4] */}
+
+          {/* Google Login Button */}
+          <div className="mt-4 mb-6">
+            <GoogleLoginButton label="Sign up with Google" />
+          </div>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white px-4 text-gray-500">Or</span>
+            </div>
+          </div>
 
           <form onSubmit={handleSignUp}>
             <Input

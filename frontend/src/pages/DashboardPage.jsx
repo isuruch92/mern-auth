@@ -34,14 +34,27 @@ const DashboardPage = () => {
           <h3 className="text-xl font-semibold text-[#1976d2] mb-3">
             Profile Information
           </h3>
-          {/* dark => text-gray-300
+          <div className="flex flex-row items-center gap-4">
+            <div className="bg-gray-500 rounded-full w-14 h-14 flex items-center justify-center overflow-hidden ring-2">
+              {user.isGoogleUser ? (
+                <img src={user.profilePicture} />
+              ) : (
+                <span className="font-bold text-white text-2xl tracking-wider">
+                  {user.name.substr(0, 2).toUpperCase()}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col gap-1">
+              {/* dark => text-gray-300
               light => text-gray-700*/}
-          <p className="text-gray-700">
-            <span className="font-bold">Name:</span> {user.name}
-          </p>
-          <p className="text-gray-700">
-            <span className="font-bold">Email:</span> {user.email}
-          </p>
+              <p className="text-gray-700">
+                <span className="font-bold">Name:</span> {user.name}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-bold">Email:</span> {user.email}
+              </p>
+            </div>
+          </div>
         </motion.div>
         <motion.div
           className="p-4 bg-white border-gray-300 rounded-lg border"

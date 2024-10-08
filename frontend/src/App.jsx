@@ -22,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!user.isVerified) {
+  if (!user?.isVerified) {
     return <Navigate to="/verify-email" replace />;
   }
 
@@ -66,11 +66,37 @@ const RedirectAuthenticatedUser = ({ children }) => {
 };
 
 function App() {
-  const { isCheckingAuth, checkAuth } = useAuthStore();
+  const { isCheckingAuth, checkAuth, setUser, setErrorMessage } =
+    useAuthStore();
 
   useEffect(() => {
-    checkAuth();
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get("error");
+
+    if (!error) {
+      checkAuth();
+    }
   }, [checkAuth]);
+
+  useEffect(() => {
+    // After singing up with Google :  Check if a JWT token is available in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    const user = urlParams.get("user");
+    const error = urlParams.get("error");
+
+    if (token && user) {
+      // Set the user in the Zustand store and mark as authenticated
+      setUser(JSON.parse(user), token);
+    } else if (error) {
+      if (error === "EmailAlreadyRegistered") {
+        // Handle the error for already registered email
+        setErrorMessage(
+          "This email is already registered. Please log in using your email and password."
+        );
+      }
+    }
+  }, [setUser, setErrorMessage]);
 
   if (isCheckingAuth) return <LoadingSpinner />;
 

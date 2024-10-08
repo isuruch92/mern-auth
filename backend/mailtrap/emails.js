@@ -36,7 +36,7 @@ export const sendWelcomeEmail = async (email, name) => {
       template_uuid: "4e67293e-cb6a-45f6-a573-4f846f3c5885",
       template_variables: {
         name: name,
-        company_info_name: "IC Auth Company",
+        company_info_name: "MERN Auth Project",
       },
     });
 
