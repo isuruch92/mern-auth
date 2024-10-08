@@ -349,6 +349,17 @@ export const checkAuth = async (req, res) => {
   }
 };
 
+export const googleAuthSignup = async (req, res) => {
+  const authUrl = googleAuthClient.generateAuthUrl({
+    access_type: "offline", // 'offline' to get a refresh token if needed
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+    ], // Permissions requested from the user
+  });
+  res.redirect(authUrl); // Redirect the user to Google's OAuth login page
+};
+
 export const googleAuthCallback = async (req, res) => {
   const { code } = req.query;
 
@@ -391,10 +402,10 @@ export const googleAuthCallback = async (req, res) => {
         profilePicture: picture,
       });
       await user.save();
-    }
 
-    // Step 4.5
-    await sendWelcomeEmail(user.email, user.name);
+      // Step 4.5
+      await sendWelcomeEmail(user.email, user.name);
+    }
 
     // Step 5: Generate JWT and set cookie
     const token = generateTokenAndSetCookie(res, user._id);
