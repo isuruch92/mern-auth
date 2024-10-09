@@ -16,6 +16,13 @@ import { googleAuthClient } from "../google-auth/google-auth.config.js";
 
 const router = express.Router();
 
+router.get("/test", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "API test success",
+  });
+});
+
 //Regular auth routes
 router.get("/check-auth", verifyToken, checkAuth);
 
