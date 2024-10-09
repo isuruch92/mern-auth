@@ -44,8 +44,25 @@ app.use("/api/auth", authRoutes);
   });
 } */
 
-app.listen(5000, async () => {
-  await connectDB();
-  console.log("Server is running on port: ", PORT);
-  console.log("HELLO ISURU");
-});
+// app.listen(5000, () => {
+//   connectDB();
+//   console.log("Server is running on port: ", PORT);
+// });
+
+// Server start function
+const startServer = async () => {
+  try {
+    // Connect to the database
+    await connectDB();
+
+    // Start the server after a successful DB connection
+    app.listen(PORT, () => {
+      console.log(`Server is running on port: ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start the server: ", error?.message);
+  }
+};
+
+// Start the server
+startServer();
