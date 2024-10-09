@@ -2,11 +2,10 @@
   "name": "mern-auth",
   "version": "1.0.0",
   "description": "",
-  "main": "backend/index.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon backend/index.js",
-    "start": "NODE_ENV=production node backend/index.js",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "dev": "SET NODE_ENV=development&& nodemon index.js",
+    "start": "SET NODE_ENV=production&& node index.js"
   },
   "keywords": [],
   "author": "",
