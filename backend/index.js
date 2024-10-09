@@ -45,7 +45,7 @@ app.use("/api/auth", authRoutes);
 } */
 
 app.listen(5000, () => {
-  // connectDB();
+  connectDB();
   console.log("Server is running on port: ", PORT);
   console.log("HELLO ISURU");
 });
