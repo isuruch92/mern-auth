@@ -5,11 +5,17 @@ export const generateTokenAndSetCookie = (res, userId) => {
     expiresIn: "7d",
   });
 
+  console.log("Construction cookie:", process.env.NODE_ENV);
+
   res.cookie("token", token, {
     httpOnly: true, //prevent XSS
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict", // prevent csrf (cross site resource forgery)
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // prevent csrf (cross site resource forgery)
     maxAge: 7 * 24 * 60 * 60 * 1000, //7 days valid
+    domain:
+      process.env.NODE_ENV === "production"
+        ? "mern-auth-backend-gray.vercel.app"
+        : "localhost", // Backend domain
   });
 
   return token;
