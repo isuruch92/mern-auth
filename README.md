@@ -4,7 +4,7 @@ A fullstack MERN authentication project that implements user authentication usin
 
 # Live Demo
 
-Coming soon
+(https://mern-auth-frontend.isuruch.com/)
 
 ## Features
 
